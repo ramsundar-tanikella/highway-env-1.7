@@ -418,6 +418,10 @@ class BSRoad(Road):
         self.dist = np.sqrt(((vehicles_pos[:, None, :] - self.bs_pos)**2).sum(axis=-1))
         rf_dr, _ = rf_sinr_matrix(self.dist[:, :self.rf_bs_count])
         thz_dr, _ = thz_sinr_matrix(self.dist[:, self.rf_bs_count:])
+        print("rf_dr_shape\n",rf_dr.shape)
+        print("thz_dr_shape\n",thz_dr.shape)
+        print("rf_dr\n",rf_dr)
+        print("thz_dr\n",thz_dr)
         self.total_dr = np.c_[rf_dr, thz_dr]
     
     def get_distance(self, vid):
