@@ -281,6 +281,17 @@ class KinematicTeleObservation(ObservationType):
         self.observe_intentions = observe_intentions
     def space(self) -> spaces.Space:
         return spaces.Box(shape=(self.vehicles_count, len(self.features)), low=-np.inf, high=np.inf, dtype=np.float32)
+
+    def discretize(self, df: pd.DataFrame) -> pd.DataFrame:
+        resolu_x = 10
+        resolu_vx = 5
+        df['x'] = df['x']/resolu_x
+        #df['y'] = df['y']/resolu
+        df['vx'] = df['vx']/resolu_vx
+        #df['vy'] = df['vy']/resolu
+        df = df.astype(int)
+        return df
+    
     def normalize_obs(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Normalize the observation values.
@@ -326,7 +337,7 @@ class KinematicTeleObservation(ObservationType):
 
         # Normalize and clip
         if self.normalize:
-            df = self.normalize_obs(df)
+            df = self.discretize(df)
         # Fill missing rows
         if df.shape[0] < self.vehicles_count:
             rows = np.zeros((self.vehicles_count - df.shape[0], len(self.features)))
